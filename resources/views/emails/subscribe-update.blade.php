@@ -1,2 +1,2 @@
-Subscribes url: {{ $subscribe->url }}
-Updated price: {{ $subscribe->price }}
+<p>Subscribes url: {{ $subscribe->url }}</p>
+<p>Updated price: {{ $subscribe->price }}</p>
