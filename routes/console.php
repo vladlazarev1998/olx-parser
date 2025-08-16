@@ -9,4 +9,4 @@ Schedule::call(callback: function () {
     foreach ($subscribes as $subscribe) {
         UpdateSubscribePriceJob::dispatch($subscribe);
     }
-})->everyMinute();
+})->everyFiveMinutes();
