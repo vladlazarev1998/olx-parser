@@ -14,19 +14,19 @@ composer install
 cp .env.example .env
 ```
 
-4) Download images and start docker
+4) Generate app key
+```
+php artisan key:generate
+```
+
+5) Download images and start docker containers
 ```
 docker-compose up -d
 ```
 
-5) Migrate DB (If using docker, go to laravel container and start migration there)
+6) Migrate DB (If using docker, go to laravel container and start migration there)
 ```
 php artisan migrate
-```
-
-In docker container
-```
-docker exec -it  olx-parser_laravel_1 php artisan migrate
 ```
 
 API url for subscribes with params:
