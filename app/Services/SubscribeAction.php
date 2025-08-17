@@ -21,15 +21,18 @@ class SubscribeAction
             'email' => $email,
         ]);
 
-        $subscribe = Subscribe::firstOrCreate([
-            'url' => $url,
-        ]);
+        $subscribe = Subscribe::where('url', $url)->first();
+
+        if (!$subscribe) {
+            $subscribe = Subscribe::create([
+                'url' => $url,
+                'price' => app(ParseUrlAction::class)->execute($url)
+            ]);
+        }
 
         UserSubscribe::firstOrCreate([
             'user_id' => $user->id,
             'subscribe_id' => $subscribe->id,
         ]);
-
-        UpdateSubscribePriceJob::dispatch($subscribe);
     }
 }
