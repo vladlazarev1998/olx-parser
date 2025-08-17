@@ -14,25 +14,35 @@ class SubscribeAction
      * @param string $email
      * @param string $url
      * @return void
+     * @throws \Exception|\Throwable
      */
     public function execute(string $email, string $url): void
     {
-        $user = User::firstOrCreate([
-            'email' => $email,
-        ]);
+        \DB::beginTransaction();
 
-        $subscribe = Subscribe::where('url', $url)->first();
-
-        if (!$subscribe) {
-            $subscribe = Subscribe::create([
-                'url' => $url,
-                'price' => app(ParseUrlAction::class)->execute($url)
+        try {
+            $user = User::firstOrCreate([
+                'email' => $email,
             ]);
-        }
 
-        UserSubscribe::firstOrCreate([
-            'user_id' => $user->id,
-            'subscribe_id' => $subscribe->id,
-        ]);
+            $subscribe = Subscribe::where('url', $url)->first();
+
+            if (!$subscribe) {
+                $subscribe = Subscribe::create([
+                    'url' => $url,
+                    'price' => app(ParseUrlAction::class)->execute($url)
+                ]);
+            }
+
+            UserSubscribe::firstOrCreate([
+                'user_id' => $user->id,
+                'subscribe_id' => $subscribe->id,
+            ]);
+
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            throw $e;
+        }
     }
 }
